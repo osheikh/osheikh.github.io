@@ -1,29 +1,48 @@
-/**
- * Welcome to your Workbox-powered service worker!
- *
- * You'll need to register this file in your web app and you should
- * disable HTTP caching for this file too.
- * See https://goo.gl/nhQhGp
- *
- * The rest of the code is auto-generated. Please don't update this file
- * directly; instead, make changes to your Workbox build configuration
- * and re-run your build process.
- * See https://goo.gl/2aRDsh
- */
+importScripts("/precache-manifest.11a08ca86c3733869845e2b243753d89.js", "https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
-importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
+if (workbox) {
+  console.log(`Workbox is loaded`);
 
-importScripts(
-  "/precache-manifest.9c192b6f70525262b0dfc333dddbb452.js"
+  workbox.precaching.precacheAndRoute(self.__precacheManifest);
+} else {
+  console.log(`Workbox didn't load`);
+}
+
+workbox.setConfig({
+  debug: false
+});
+
+workbox.precaching.precacheAndRoute([]);
+
+workbox.routing.registerRoute(
+  /\.(?:png|gif|jpg|jpeg|svg)$/,
+  workbox.strategies.staleWhileRevalidate({
+    cacheName: "images",
+    plugins: [
+      new workbox.expiration.Plugin({
+        maxEntries: 60,
+        maxAgeSeconds: 30 * 24 * 60 * 60 // 30 Days
+      })
+    ]
+  })
 );
 
-workbox.core.setCacheNameDetails({prefix: "flickr-gallery"});
+workbox.routing.registerRoute(
+  new RegExp("https://api.flickr.com/services/rest"),
+  workbox.strategies.networkFirst({
+    cacheName: "api"
+  })
+);
 
-/**
- * The workboxSW.precacheAndRoute() method efficiently caches and responds to
- * requests for URLs in the manifest.
- * See https://goo.gl/S9QRab
- */
-self.__precacheManifest = [].concat(self.__precacheManifest || []);
-workbox.precaching.suppressWarnings();
-workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+workbox.routing.registerRoute(
+  new RegExp("https://fonts.(?:googleapis|gstatic).com/(.*)"),
+  workbox.strategies.cacheFirst({
+    cacheName: "googleapis",
+    plugins: [
+      new workbox.expiration.Plugin({
+        maxEntries: 30
+      })
+    ]
+  })
+);
+
