@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.5d34e30ab36bc63bc5f17ffff3582aa2.js"
+  "/precache-manifest.9c192b6f70525262b0dfc333dddbb452.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "flickr-gallery"});
